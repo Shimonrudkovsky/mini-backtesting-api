@@ -1,0 +1,40 @@
+[tool.poetry]
+name = "mini_backtesting_api"
+version = "0.1.0"
+description = ""
+authors = ["Simon Rudkovsky <shimonrudkovsky@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = ">=0.115.8,<0.116.0"
+pandas = {extras = ["parquet"], version = "^2.2.3"}
+uvicorn = "^0.34.0"
+pydantic = "^2.10.6"
+mypy = "^1.15.0"
+pandas-stubs = "^2.2.3.241126"
+
+[tool.poetry.group.dev.dependencies]
+isort = "^6.0.0"
+black = "^25.1.0"
+flake8 = "^7.1.1"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+start = "mini_backtesting_api.main:start"
+
+[tool.black]
+line-length = 120
+target-version = ['py311']
+include = '\.pyi?$'
+skip-string-normalization = false
+
+[tool.isort]
+line_length = 120
+force_grid_wrap = 0
+multi_line_output = 3
+use_parentheses = true
+include_trailing_comma = true

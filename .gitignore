@@ -1,0 +1,13 @@
+.vscode/
+*.pyc
+**/*.pyc
+/tmp/*
+__pycache__/
+**/__pycache__/
+__pycache__
+*.properties
+.DS_Store
+.venv/
+.pytest_cache/
+.mypy_cache
+test/.pytest_cache/

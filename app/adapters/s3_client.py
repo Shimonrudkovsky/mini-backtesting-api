@@ -1,0 +1,54 @@
+import boto3
+import boto3.exceptions
+from botocore.exceptions import DataNotFoundError
+from mypy_boto3_s3.client import S3Client
+
+
+def is_bucket_exists(s3_client: S3Client, bucket_name: str) -> bool:
+    response = s3_client.list_buckets()
+    return any(bucket["Name"] == bucket_name for bucket in response["Buckets"])
+
+
+def create_bucket(s3_client: S3Client, bucket_name: str) -> None:
+    s3_client.list_buckets
+    if not is_bucket_exists(s3_client=s3_client, bucket_name=bucket_name):
+        try:
+            s3_client.create_bucket(
+                ACL="private",
+                Bucket=bucket_name,
+            )
+        except boto3.exceptions.Boto3Error as err:
+            raise
+
+
+def upload_to_s3(s3_client: S3Client, bucket_name: str, file_name: str, file_content: bytes) -> None:
+    try:
+        s3_client.put_object(Bucket=bucket_name, Key=file_name, Body=file_content)
+    except boto3.exceptions.Boto3Error as err:
+        raise
+
+
+def get_from_s3(s3_client: S3Client, bucket_name: str, file_name: str) -> bytes:
+    try:
+        objects_list = s3_client.list_objects_v2(Bucket=bucket_name).get("Contents")
+    except boto3.exceptions.Boto3Error as err:
+        raise
+    if not objects_list or len(objects_list) == 0:
+        raise DataNotFoundError
+
+    response = None
+    for obj in objects_list:
+        if file_name == obj["Key"]:
+            try:
+                response = s3_client.get_object(Bucket=bucket_name, Key=file_name)
+            except boto3.exceptions.Boto3Error as err:
+                raise
+
+    if not response:
+        raise DataNotFoundError
+
+    body = response.get("Body")
+    if not body:
+        raise DataNotFoundError
+
+    return body.read()

@@ -1,7 +1,8 @@
+from .configs import AppConfig, S3Config
 from .healthcheck import HealthCheck
-from .s3 import S3Config
 
 __all__ = [
+    "AppConfig",
     "HealthCheck",
     "S3Config",
 ]

@@ -7,6 +7,7 @@ from app.utils.healthcheck import check_health
 router = APIRouter()
 
 
+@router.get("/")
 @router.get(
     "/health",
     tags=["Health check"],

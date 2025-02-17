@@ -40,8 +40,7 @@ def generate_dummy_data(s3_client: S3Client, bucket_name: str):
         )
 
 
-def init_app(app_config: AppConfig) -> FastAPI:
-    app = FastAPI()
+def init_app(app: FastAPI, app_config: AppConfig) -> FastAPI:
     app.state.start_time = datetime.now()
 
     # routes

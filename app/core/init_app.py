@@ -7,6 +7,7 @@ from fastapi import FastAPI
 from mypy_boto3_s3.client import S3Client
 
 from app.adapters.s3_client import create_bucket, upload_to_s3
+from app.api.v1.routes.backtest import router as backtest_router
 from app.api.v1.service_routes import service_routers
 from app.core.storage import init_s3_storage
 from app.models import AppConfig
@@ -45,6 +46,8 @@ def init_app(app: FastAPI, app_config: AppConfig) -> FastAPI:
 
     # routes
     app.include_router(service_routers)
+    app.include_router(backtest_router)
+
     app.state.start_time = datetime.now()
 
     # s3 client initialisation

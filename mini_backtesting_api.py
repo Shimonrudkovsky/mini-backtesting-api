@@ -20,16 +20,21 @@ app_config = AppConfig(
 
 app = FastAPI()
 
+
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
     return JSONResponse(
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-        content=jsonable_encoder({"detail": exc.errors(), "Error": "Name field is missing"}),
+        content=jsonable_encoder(
+            {"detail": ", ".join([i.get("msg") for i in exc.errors()]), "Error": "Request body error"}
+        ),
     )
+
+app = init_app(app, app_config)
+
 
 def start(app: FastAPI, app_config: AppConfig):
     """Launched with `poetry run start` at root level"""
-    app = init_app(app, app_config)
     uvicorn.run("mini_backtesting_api:app", host="0.0.0.0", port=app_config.port, reload=True)
 
 

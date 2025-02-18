@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import pytest
 from fastapi import FastAPI
+from fastapi.exceptions import RequestValidationError
 from fastapi.testclient import TestClient
 
 from app.api.v1.routes.backtest import router
@@ -14,11 +15,17 @@ from mini_backtesting_api import validation_exception_handler
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 
+class MockS3Client:
+    def init_s3_storage(self, *args, **kwargs):
+        pass
+
+
 @pytest.fixture(scope='module')
 def test_app():
     app = FastAPI()
     app.include_router(router)
-    app.add_exception_handler(Exception, validation_exception_handler)
+    app.add_exception_handler(RequestValidationError, validation_exception_handler)
+    app.state.s3_client = MockS3Client()
     return app
 
 

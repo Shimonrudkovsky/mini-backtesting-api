@@ -34,7 +34,7 @@ def get_from_s3(s3_client: S3Client, bucket_name: str, file_name: str) -> bytes:
     except boto3.exceptions.Boto3Error as err:
         raise
     if not objects_list or len(objects_list) == 0:
-        raise DataNotFoundError
+        raise DataNotFoundError(data_path=f"{bucket_name}/{file_name}")
 
     response = None
     for obj in objects_list:
@@ -45,7 +45,7 @@ def get_from_s3(s3_client: S3Client, bucket_name: str, file_name: str) -> bytes:
                 raise
 
     if not response:
-        raise DataNotFoundError
+        raise DataNotFoundError(data_path=f"{bucket_name}/{file_name}")
 
     body = response.get("Body")
     if not body:

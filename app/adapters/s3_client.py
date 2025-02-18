@@ -7,7 +7,11 @@ from app.core.logging import logger
 
 
 def is_bucket_exists(s3_client: S3Client, bucket_name: str) -> bool:
-    response = s3_client.list_buckets()
+    try:
+        response = s3_client.list_buckets()
+    except boto3.exceptions.Boto3Error:
+            raise BotoCoreError(error="can't get buckets list")
+
     return any(bucket["Name"] == bucket_name for bucket in response["Buckets"])
 
 

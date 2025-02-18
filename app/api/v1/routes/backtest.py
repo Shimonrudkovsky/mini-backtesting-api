@@ -1,11 +1,11 @@
 from io import BytesIO
 
 import pandas as pd
-from botocore.exceptions import DataNotFoundError
+from botocore.exceptions import BotoCoreError, DataNotFoundError
 from fastapi import APIRouter, Request
 
 from app.adapters import s3_client
-from app.schemas.errors import DataNotFoundException
+from app.schemas.errors import DataNotFoundException, StorageError
 from app.schemas.requests import BacktestRequest
 from app.schemas.responses import BacktestReply
 from app.services import data_processsor
@@ -28,6 +28,8 @@ def backtest(request: Request, request_body: BacktestRequest):
         ))
     except DataNotFoundError:
         raise DataNotFoundException()
+    except BotoCoreError:
+        raise StorageError()
 
     df = pd.read_parquet(data)
 

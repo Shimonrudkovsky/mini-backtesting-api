@@ -55,3 +55,18 @@ def mini_df():
     )
 
     return data_frame
+
+
+@pytest.fixture(scope="module")
+def filtered_df():
+    data_frame = pd.DataFrame(
+        data=[
+            [4.4, 7.7, None, 9.9, 22.22, 99.99],
+            [7.7, 5.5, 2.4, None, 2.2, None],
+            [None, 33.33, 44.44, 1.55, 22.66, 9.77],
+        ],
+        index=["2021-01-17", "2022-02-27", "2023-03-29"],
+        columns=["1", "3", "4", "5", "6", "7"],
+    )
+
+    return data_frame

@@ -12,9 +12,11 @@ from app.api.v1.routes.backtest import router as backtest_router
 from app.api.v1.service_routes import service_routers
 from app.core.storage import init_s3_storage
 from app.models import AppConfig
+from app.core.logging import logger
 
 
 def generate_dummy_data(s3_client: S3Client, bucket_name: str):
+    logger.info("Generating dummy data...")
     data_field_identifiers = [
         "market_capitalization",
         "prices",
@@ -40,9 +42,11 @@ def generate_dummy_data(s3_client: S3Client, bucket_name: str):
             file_name=f"{data_field_indentifier}.parquet",
             file_content=out_buffer.read(),
         )
+    logger.info("Dummy data uploaded to storage.")
 
 
 def init_app(app: FastAPI, app_config: AppConfig) -> FastAPI:
+    logger.info("Initializing application...")
     app.state.start_time = datetime.now()
 
     # routes
@@ -62,4 +66,5 @@ def init_app(app: FastAPI, app_config: AppConfig) -> FastAPI:
     if dummy_data == "yes":
         generate_dummy_data(s3_client, bucket_name=app_config.s3.bucket_name)
 
+    logger.info("Application initialized.")
     return app

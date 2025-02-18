@@ -15,6 +15,7 @@ services:
       - S3_BUCKET_NAME=dummy-data
       - APP_PORT=8080
       - DUMMY_DATA=yes
+      - LOG_LEVEL=INFO
 
   s3:
     image: minio/minio

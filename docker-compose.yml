@@ -8,6 +8,13 @@ services:
       - "8080:8080"
     depends_on:
       - s3
+    environment:
+      - S3_ENDPOINT=http://s3:9000
+      - S3_ACCESS_KEY=TF4QBBMadLeEiAm
+      - S3_SECRET_KEY=k9uVR3K1LvUR66z
+      - S3_BUCKET_NAME=dummy-data
+      - APP_PORT=8080
+      - DUMMY_DATA=yes
 
   s3:
     image: minio/minio

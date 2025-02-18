@@ -1,3 +1,5 @@
+import os
+
 import uvicorn
 from fastapi import FastAPI, Request, status
 from fastapi.encoders import jsonable_encoder
@@ -8,13 +10,13 @@ from app.core.init_app import init_app
 from app.models import AppConfig, S3Config
 
 s3_config = S3Config(
-    url="http://localhost:9000",
-    aws_access_key_id="TF4QBBMadLeEiAm",
-    aws_secret_access_key="k9uVR3K1LvUR66z",
-    bucket_name="test",
+    url=os.getenv("S3_ENDPOINT", "http://s3:9000"),
+    aws_access_key_id=os.getenv("S3_ACCESS_KEY"),
+    aws_secret_access_key=os.getenv("S3_SECRET_KEY"),
+    bucket_name=os.getenv("S3_BUCKET_NAME", "test"),
 )
 app_config = AppConfig(
-    port=8080,
+    port=int(os.getenv("APP_PORT", 8080)),
     s3=s3_config,
 )
 

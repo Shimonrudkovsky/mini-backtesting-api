@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 from io import BytesIO
 
@@ -57,7 +58,8 @@ def init_app(app: FastAPI, app_config: AppConfig) -> FastAPI:
     app.state.s3_client = s3_client
     app.state.app_config = app_config
 
-    # TODO: add environment variable to determine if dummy data is needed
-    generate_dummy_data(s3_client, bucket_name=app_config.s3.bucket_name)
+    dummy_data = os.getenv("DUMMY_DATA", "yes")
+    if dummy_data == "yes":
+        generate_dummy_data(s3_client, bucket_name=app_config.s3.bucket_name)
 
     return app

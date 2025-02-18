@@ -7,7 +7,7 @@ from app.models.healthcheck import Checks, HealthCheck
 
 
 async def check_health(request: Request) -> HealthCheck:
-    checks = Checks(s3=is_bucket_exists(request.app.state.s3_client, "test"))  # TODO: remove hardcode
+    checks = Checks(s3=is_bucket_exists(request.app.state.s3_client, request.app.state.app_config.s3.bucket_name))
     return HealthCheck(
         is_sick=False,
         checks=checks,

@@ -8,11 +8,11 @@ from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.testclient import TestClient
 
-from app.api.v1.routes.backtest import router
-from mini_backtesting_api import validation_exception_handler
-
 # Add parent directory to the sys.path to resolve relative imports
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from app.api.v1.routes.backtest import router
+from app.core.init_app import validation_exception_handler
+from app.models import AppConfig, S3Config
 
 
 class MockS3Client:
@@ -22,10 +22,22 @@ class MockS3Client:
 
 @pytest.fixture(scope='module')
 def test_app():
+    s3_config = S3Config(
+        url="http://",
+        aws_access_key_id="S3_ACCESS_KEY",
+        aws_secret_access_key="S3_SECRET_KEY",
+        bucket_name="test_bucket",
+    )
+    app_config = AppConfig(
+        port=8080,
+        s3=s3_config,
+    )
     app = FastAPI()
     app.include_router(router)
+
     app.add_exception_handler(RequestValidationError, validation_exception_handler)
     app.state.s3_client = MockS3Client()
+    app.state.app_config = app_config
     return app
 
 

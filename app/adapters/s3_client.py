@@ -1,6 +1,6 @@
 import boto3
 import boto3.exceptions
-from botocore.exceptions import DataNotFoundError, BotoCoreError
+from botocore.exceptions import BotoCoreError, DataNotFoundError
 from mypy_boto3_s3.client import S3Client
 
 from app.core.logging import logger

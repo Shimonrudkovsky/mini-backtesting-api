@@ -4,15 +4,27 @@ from io import BytesIO
 
 import numpy as np
 import pandas as pd
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, status
+from fastapi.encoders import jsonable_encoder
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 from mypy_boto3_s3.client import S3Client
 
 from app.adapters.s3_client import create_bucket, upload_to_s3
 from app.api.v1.routes.backtest import router as backtest_router
 from app.api.v1.service_routes import service_routers
+from app.core.logging import logger
 from app.core.storage import init_s3_storage
 from app.models import AppConfig
-from app.core.logging import logger
+
+
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    return JSONResponse(
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        content=jsonable_encoder(
+            {"detail": ", ".join([i.get("msg") for i in exc.errors()]), "Error": "Request body error"}
+        ),
+    )
 
 
 def generate_dummy_data(s3_client: S3Client, bucket_name: str):
@@ -65,6 +77,8 @@ def init_app(app: FastAPI, app_config: AppConfig) -> FastAPI:
     dummy_data = os.getenv("DUMMY_DATA", "yes")
     if dummy_data == "yes":
         generate_dummy_data(s3_client, bucket_name=app_config.s3.bucket_name)
+
+    app.add_exception_handler(RequestValidationError, validation_exception_handler)
 
     logger.info("Application initialized.")
     return app

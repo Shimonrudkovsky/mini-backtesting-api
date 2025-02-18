@@ -1,10 +1,7 @@
 import os
 
 import uvicorn
-from fastapi import FastAPI, Request, status
-from fastapi.encoders import jsonable_encoder
-from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI
 
 from app.core.init_app import init_app
 from app.models import AppConfig, S3Config
@@ -21,16 +18,6 @@ app_config = AppConfig(
 )
 
 app = FastAPI()
-
-
-@app.exception_handler(RequestValidationError)
-async def validation_exception_handler(request: Request, exc: RequestValidationError):
-    return JSONResponse(
-        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-        content=jsonable_encoder(
-            {"detail": ", ".join([i.get("msg") for i in exc.errors()]), "Error": "Request body error"}
-        ),
-    )
 
 app = init_app(app, app_config)
 

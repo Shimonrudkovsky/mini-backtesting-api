@@ -1,5 +1,6 @@
-from app.services.data_processsor import dates_filter
 from app.models import CalendarRule, CalendarRuleTypeEnum
+from app.services.data_processsor import dates_filter
+
 
 def test_dates_filter_quarterly(df):
     calendar_rule = CalendarRule(

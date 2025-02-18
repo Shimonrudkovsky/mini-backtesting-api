@@ -1,13 +1,13 @@
 # Mini Backtesting API
 
-This project provides a FastAPI-based API for running backtests on historical data. The API includes endpoints for submitting backtest requests and handling various constraints and errors.
+This project provides a FastAPI-based API for running backtests on historical data. The API includes endpoint for submitting backtest requests and handling various constraints and errors.
 
 ## Installation
 
 1. Clone the repository:
 
     ```sh
-    git clone https://github.com/yourusername/mini-backtesting-api.git
+    git clone https://github.com/Shimonrudkovsky/mini-backtesting-api
     cd mini-backtesting-api
     ```
 
@@ -18,18 +18,13 @@ This project provides a FastAPI-based API for running backtests on historical da
 1. Build and start the containers:
 
     ```sh
-    docker-compose up --d
+    docker-compose up -d
     ```
 
 2. The API will be available at `localhost:80`.
 
 ### Using Uvicorn
 
-To start the FastAPI server without Docker, run:
-
-```sh
-uvicorn app.main:app --reload
-```
 
 The API will be available at http://127.0.0.1:80.
 
